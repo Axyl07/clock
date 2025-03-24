@@ -1,12 +1,116 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# **Digital Clock ⏰**  
 
-Currently, two official plugins are available:
+A simple **digital clock** component built using React. It updates every second and displays the current time in a 12-hour format with an AM/PM indicator.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## **Features**  
+✅ Displays the current time in **hh:mm:ss AM/PM** format  
+✅ Updates every second using `setInterval`  
+✅ Handles **zero-padding** for single-digit hours, minutes, and seconds  
+✅ **Optimized cleanup** with `useEffect` to prevent memory leaks  
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## **Installation & Usage**  
+
+### **1. Install Dependencies**  
+Ensure you have a React project set up. If not, create one using:  
+
+```sh
+npx create-react-app my-app
+cd my-app
+npm install
+```
+
+### **2. Add the Digital Clock Component**  
+Create a new file **`DigitalClock.js`** inside `src/` and paste the following code:  
+
+```jsx
+import { useState, useEffect } from "react";
+
+function DigitalClock() {
+  const [time, setTime] = useState(new Date());
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  function formatTime() {
+    let hours = time.getHours();
+    const minutes = time.getMinutes();
+    const seconds = time.getSeconds();
+    const meridiem = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+    return `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)} ${meridiem}`;
+  }
+
+  function padZero(number) {
+    return number < 10 ? `0${number}` : number;
+  }
+
+  return (
+    <div className="clock-container">
+      <div className="clock">
+        <span>{formatTime()}</span>
+      </div>
+    </div>
+  );
+}
+
+export default DigitalClock;
+```
+
+### **3. Import & Use in Your App**  
+Open `App.js` and import the component:  
+
+```jsx
+import DigitalClock from "./DigitalClock";
+
+function App() {
+  return (
+    <div className="App">
+      <h1>My Digital Clock</h1>
+      <DigitalClock />
+    </div>
+  );
+}
+
+export default App;
+```
+
+---
+
+## **Styling (Optional) 🎨**  
+You can add the following CSS in **`App.css`** for better styling:  
+
+```css
+.clock-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #282c34;
+}
+
+.clock {
+  font-size: 3rem;
+  font-family: 'Courier New', monospace;
+  color: white;
+  background: black;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
+}
+```
+
+---
+
+## **License**  
+This project is **open-source** and free to use! 🚀  
+
+---
+
+Now, your **Digital Clock** component is ready to use! 🎉
